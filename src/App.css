@@ -1,0 +1,47 @@
+/* src/App.css */
+:root {
+  --isabelline: #f2efeaff;
+  --coral: #fc7753ff;
+  --tiffany-blue: #66d7d1ff;
+  --english-violet: #403d58ff;
+  --straw: #dbd56eff;
+}
+
+body {
+  background-color: var(--isabelline);
+  color: var(--english-violet);
+}
+
+.dark-mode {
+  background-color: var(--english-violet);
+  color: var(--isabelline);
+}
+
+.button-primary {
+  background-color: var(--coral);
+  color: var(--isabelline);
+  border: none;
+}
+
+.button-primary:hover {
+  background-color: var(--tiffany-blue);
+  color: var(--english-violet);
+}
+
+.input-light {
+  background-color: var(--isabelline);
+  color: var(--english-violet);
+}
+
+.input-dark {
+  background-color: var(--english-violet);
+  color: var(--isabelline);
+}
+
+.text-link {
+  color: var(--coral);
+}
+
+.text-link:hover {
+  color: var(--tiffany-blue);
+}
