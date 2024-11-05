@@ -1,21 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Form, Button, Row, Col } from 'react-bootstrap';
 import { FaLock, FaEnvelope, FaUserAlt } from 'react-icons/fa';
 import useTheme from '@/store/theme';
-
-interface LoginFormProps {
-  onLogin: (values: LoginValues) => void;
-}
+import { login } from '../../api/auth';
+import { useNavigate } from "react-router-dom";
 
 interface LoginValues {
   email: string;
   password: string;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
+const LoginForm: React.FC = () => {
   const [theme] = useTheme();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); 
+  const isDarkMode = theme === 'dark';
+  const navigate = useNavigate(); 
 
   const formik = useFormik<LoginValues>({
     initialValues: {
@@ -23,81 +23,127 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string().min(6, 'Must be at least 6 characters').required('Required'),
+      email: Yup.string().email('بريد إلكتروني غير صحيح.').required('ادخل البريد الإلكتروني'),
+      password: Yup.string().min(8, 'يجب أن تكون كلمة السر على الأقل 8 حروف.').required('ادخل كلمة السر'),
     }),
     onSubmit: (values) => {
-      onLogin(values);
+      handleLogin(values.email, values.password);
     },
   });
 
-  const isDarkMode = theme === 'dark';
+  const handleLogin = async (email: string, password: string) => {
+    setErrorMessage(null); 
+    try {
+      const response = await login({ email, password });
+      console.log('Login successful:', response);
+
+      const token = response.token || '';
+      const role = response.role || '';
+  
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+      if (role === 'STUDENT') {
+        navigate('/myStudentProfile'); 
+      }
+
+    } catch (error: any) {
+      console.error('Login failed:', error);
+      
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message;
+
+        if (errorMessage.includes('Invalid credentials.')) {
+          setErrorMessage('البيانات غير صحيحة، يرجى مراجعة كلمة السر.');
+        } else if (errorMessage.includes("User with email")) {
+          setErrorMessage('المستخدم الذي يحمل هذا البريد الإلكتروني غير موجود.'); 
+        } else {
+          setErrorMessage(errorMessage); 
+        }
+      } else {
+        setErrorMessage('حدث خطأ غير متوقع.'); 
+      }
+    }
+  };
 
   return (
-    <div className={`p-4 rounded ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
-      <div className="text-center mb-4">
-        <FaUserAlt
-          size={40}
-          className="mb-3"
-          color={isDarkMode ? 'var(--isabelline)' : 'var(--coral)'}
-        />
-        <h2>Login</h2>
+    <div
+      dir="rtl"
+      className={`min-h-screen flex items-center justify-center px-4 ${
+        isDarkMode ? 'dark' : ''
+      } bg-gray-100 dark:bg-gray-900 transition-all duration-300`}
+    >
+      <div className="p-8 rounded-lg shadow-lg bg-white dark:bg-gray-800 w-full max-w-md transition-all duration-300">
+        <div className="text-center mb-6">
+          <FaUserAlt size={40} className="mb-3 text-gray-500 dark:text-gray-200 mx-auto" />
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">تسجيل الدخول</h2>
+        </div>
+
+        {errorMessage && (
+          <div className="mb-4 p-2 text-red-600 bg-red-200 rounded">
+            {errorMessage}
+          </div>
+        )}
+
+        <form onSubmit={formik.handleSubmit} className="space-y-4">
+          <div className="flex flex-col">
+            <label htmlFor="email" className="text-gray-700 dark:text-gray-300 flex items-center gap-1">
+              <FaEnvelope />
+              البريد الإلكتروني
+            </label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="ادخل البريد الإلكتروني"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              className={`p-2 rounded border ${
+                formik.touched.email && formik.errors.email ? 'border-red-500' : 'border-gray-300'
+              } focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600`}
+            />
+            {formik.touched.email && formik.errors.email ? (
+              <span className="text-red-500 text-sm">{formik.errors.email}</span>
+            ) : null}
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="password" className="text-gray-700 dark:text-gray-300 flex items-center gap-1">
+              <FaLock />
+              كلمة السر
+            </label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="ادخل الرقم السري"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              className={`p-2 rounded border ${
+                formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-gray-300'
+              } focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600`}
+            />
+            {formik.touched.password && formik.errors.password ? (
+              <span className="text-red-500 text-sm">{formik.errors.password}</span>
+            ) : null}
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition"
+          >
+            تسجيل الدخول
+          </button>
+
+          <div className="flex justify-between mt-4 text-blue-600 dark:text-blue-400">
+            <button type="button" className="hover:underline">
+              نسيت كلمة السر ؟
+            </button>
+            <button type="button" className="hover:underline">
+              تسجيل حساب جديد
+            </button>
+          </div>
+        </form>
       </div>
-
-      <Form onSubmit={formik.handleSubmit}>
-        <Form.Group controlId="email">
-          <Form.Label>
-            <FaEnvelope /> Email address
-          </Form.Label>
-          <Form.Control
-            type="email"
-            name="email"
-            placeholder="Enter email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            isInvalid={!!(formik.touched.email && formik.errors.email)}
-            className={isDarkMode ? 'input-dark' : 'input-light'}
-          />
-          <Form.Control.Feedback type="invalid">{formik.errors.email}</Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Group controlId="password" className="mt-3">
-          <Form.Label>
-            <FaLock /> Password
-          </Form.Label>
-          <Form.Control
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            isInvalid={!!(formik.touched.password && formik.errors.password)}
-            className={isDarkMode ? 'input-dark' : 'input-light'}
-          />
-          <Form.Control.Feedback type="invalid">{formik.errors.password}</Form.Control.Feedback>
-        </Form.Group>
-
-        <Row className="mt-3">
-          <Col>
-            <Button type="submit" className="button-primary w-100">
-              Login
-            </Button>
-          </Col>
-        </Row>
-
-        <Row className="mt-3 text-center">
-          <Col>
-            <Button variant="link" className="text-link">
-              Forgot Password?
-            </Button>
-          </Col>
-          <Col>
-            <Button variant="link" className="text-link">
-              Sign Up
-            </Button>
-          </Col>
-        </Row>
-      </Form>
     </div>
   );
 };

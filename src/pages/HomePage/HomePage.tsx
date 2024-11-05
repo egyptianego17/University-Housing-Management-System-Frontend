@@ -1,9 +1,8 @@
 import React from 'react';
-import LoginForm from '../../components/Login/LoginForm';
 import { Container, Row, Col } from 'react-bootstrap';
 import useTheme from '@/store/theme';
 
-const LoginPage: React.FC = () => {
+const HomePage: React.FC = () => {
   const [theme] = useTheme();
   const isDarkMode = theme === 'dark';
 
@@ -18,11 +17,11 @@ const LoginPage: React.FC = () => {
     >
       <Row className="w-100">
         <Col xs={12} md={6} lg={4} className="mx-auto">
-          <LoginForm/>
+        <h2> Hi </h2>
         </Col>
       </Row>
     </Container>
   );
 };
 
-export default LoginPage;
+export default HomePage;

@@ -1,9 +1,10 @@
 import React from 'react';
-import LoginForm from '../../components/Login/LoginForm';
 import { Container, Row, Col } from 'react-bootstrap';
 import useTheme from '@/store/theme';
-
-const LoginPage: React.FC = () => {
+import StudentProfile from '../../components/StudentProfile/index';
+import Header from '@/sections/Header';
+import Sidebar from '@/sections/Sidebar';
+const MyStudentProfile: React.FC = () => {
   const [theme] = useTheme();
   const isDarkMode = theme === 'dark';
 
@@ -16,13 +17,15 @@ const LoginPage: React.FC = () => {
         background: isDarkMode ? 'var(--dark-sea-green)' : 'var(--mint)',
       }}
     >
+      <Header />
+      <Sidebar />
       <Row className="w-100">
         <Col xs={12} md={6} lg={4} className="mx-auto">
-          <LoginForm/>
+        <StudentProfile/>
         </Col>
       </Row>
     </Container>
   );
 };
 
-export default LoginPage;
+export default MyStudentProfile;
