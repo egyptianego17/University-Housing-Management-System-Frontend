@@ -8,7 +8,6 @@ import manifest from './manifest.json';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'University-Housing-Management-System-Frontend', // Replace 'your-repo-name' with your actual repository name
   plugins: [
     react(),
     VitePWA({
