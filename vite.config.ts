@@ -8,12 +8,12 @@ import manifest from './manifest.json';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/',
   plugins: [
     react(),
     VitePWA({
       manifest,
       includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
-      // switch to "true" to enable sw on development
       devOptions: {
         enabled: false,
       },
@@ -31,3 +31,4 @@ export default defineConfig({
     root: path.resolve(__dirname, './src'),
   },
 });
+
