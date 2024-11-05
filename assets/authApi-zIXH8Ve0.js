@@ -1,0 +1,1 @@
+import{a as t}from"./axiosInstance-CSnntCs6.js";const e=async s=>(await t.post("/auth/login",s)).data,o=async s=>(await t.post("auth/student/signup",s)).data,r=async()=>(await t.get("/auth/token/status")).data;export{r as c,e as l,o as s};
