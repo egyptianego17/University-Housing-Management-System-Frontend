@@ -10,21 +10,10 @@ import {
   FaLayerGroup,
 } from 'react-icons/fa';
 import useTheme from '@/store/theme';
+import { StudentProfileInterface } from '@/api/student/types';
 
-interface UserProfileData {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  email: string;
-  mobileNumber: string;
-  nationalId: string;
-  faculty: string;
-  room: string;
-  floor: number;
-}
-
-const UserProfile: React.FC = () => {
-  const [profileData, setProfileData] = useState<UserProfileData | null>(null);
+const StudentProfile: React.FC = () => {
+  const [profileData, setProfileData] = useState<StudentProfileInterface | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [theme] = useTheme();
@@ -68,7 +57,7 @@ const UserProfile: React.FC = () => {
       dir="rtl"
       className={`min-h-screen flex items-center justify-center ${
         isDarkMode ? 'dark' : ''
-      } bg-gray-100 dark:bg-gray-900 transition-all duration-300 pb-10`}
+      } bg-gray-100 dark:bg-gray-900 transition-all duration-300`}
     >
       <div className="p-8 rounded-lg shadow-lg bg-white dark:bg-gray-800 w-full max-w-md transition-all duration-300">
         <div className="text-center mb-6">
@@ -128,4 +117,4 @@ const ProfileField: React.FC<ProfileFieldProps> = ({ label, value, icon }) => (
   </div>
 );
 
-export default UserProfile;
+export default StudentProfile;

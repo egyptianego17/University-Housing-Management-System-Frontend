@@ -5,11 +5,7 @@ import { FaLock, FaEnvelope, FaUserAlt } from 'react-icons/fa';
 import useTheme from '@/store/theme';
 import { login } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
-
-interface LoginValues {
-  email: string;
-  password: string;
-}
+import { SignInRequest } from '../../api/auth/types';
 
 const LoginForm: React.FC = () => {
   const [theme] = useTheme();
@@ -17,7 +13,7 @@ const LoginForm: React.FC = () => {
   const isDarkMode = theme === 'dark';
   const navigate = useNavigate();
 
-  const formik = useFormik<LoginValues>({
+  const formik = useFormik<SignInRequest>({
     initialValues: {
       email: '',
       password: '',
@@ -45,7 +41,7 @@ const LoginForm: React.FC = () => {
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       if (role === 'STUDENT') {
-        navigate('/myStudentProfile');
+        navigate('/student/myprofile');
       }
     } catch (error: any) {
       console.error('Login failed:', error);
@@ -142,10 +138,14 @@ const LoginForm: React.FC = () => {
           </button>
 
           <div className="flex justify-between mt-4 text-blue-600 dark:text-blue-400">
-            <button type="button" className="hover:underline">
+            {/* <button type="button" className="hover:underline">
               نسيت كلمة السر ؟
-            </button>
-            <button type="button" className="hover:underline">
+            </button> */}
+            <button
+              type="button"
+              className="hover:underline"
+              onClick={() => navigate('/student/register')}
+            >
               تسجيل حساب جديد
             </button>
           </div>

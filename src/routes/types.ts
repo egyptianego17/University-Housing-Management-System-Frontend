@@ -11,6 +11,8 @@ enum Pages {
   Page4,
   HomePage,
   MyStudentProfile,
+  LandingPage,
+  Registeration,
   NotFound,
 }
 

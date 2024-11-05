@@ -16,6 +16,13 @@ const routes: Routes = {
     icon: HomeIcon,
     showInSidebar: false,
   },
+  [Pages.LandingPage]: {
+    component: asyncComponentLoader(() => import('@/pages/LandingPage')),
+    path: '/',
+    title: 'Welcome',
+    icon: HomeIcon,
+    showInSidebar: false,
+  },
   [Pages.Page1]: {
     component: asyncComponentLoader(() => import('@/pages/Page1')),
     path: '/page-1',
@@ -53,8 +60,15 @@ const routes: Routes = {
   },
   [Pages.MyStudentProfile]: {
     component: asyncComponentLoader(() => import('@/pages/MyStudentProfile')),
-    path: '/myStudentProfile',
+    path: '/student/myprofile',
     title: 'My Profile',
+    icon: HomeIcon,
+    showInSidebar: false,
+  },
+  [Pages.Registeration]: {
+    component: asyncComponentLoader(() => import('@/pages/RegisteratonPage')),
+    path: '/student/register',
+    title: 'Registeration',
     icon: HomeIcon,
     showInSidebar: false,
   },
