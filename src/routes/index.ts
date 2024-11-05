@@ -14,14 +14,14 @@ const routes: Routes = {
     path: '/login',
     title: 'Login',
     icon: HomeIcon,
-    showInSidebar: false, 
+    showInSidebar: false,
   },
   [Pages.Page1]: {
     component: asyncComponentLoader(() => import('@/pages/Page1')),
     path: '/page-1',
     title: 'Page 1',
     icon: GitHubIcon,
-    showInSidebar: true, 
+    showInSidebar: true,
   },
   [Pages.Page2]: {
     component: asyncComponentLoader(() => import('@/pages/Page2')),
@@ -64,6 +64,5 @@ const routes: Routes = {
     showInSidebar: false,
   },
 };
-
 
 export default routes;

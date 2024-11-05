@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { FaLock, FaEnvelope, FaUserAlt } from 'react-icons/fa';
 import useTheme from '@/store/theme';
 import { login } from '../../api/auth';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 interface LoginValues {
   email: string;
@@ -13,9 +13,9 @@ interface LoginValues {
 
 const LoginForm: React.FC = () => {
   const [theme] = useTheme();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isDarkMode = theme === 'dark';
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const formik = useFormik<LoginValues>({
     initialValues: {
@@ -24,7 +24,9 @@ const LoginForm: React.FC = () => {
     },
     validationSchema: Yup.object({
       email: Yup.string().email('بريد إلكتروني غير صحيح.').required('ادخل البريد الإلكتروني'),
-      password: Yup.string().min(8, 'يجب أن تكون كلمة السر على الأقل 8 حروف.').required('ادخل كلمة السر'),
+      password: Yup.string()
+        .min(8, 'يجب أن تكون كلمة السر على الأقل 8 حروف.')
+        .required('ادخل كلمة السر'),
     }),
     onSubmit: (values) => {
       handleLogin(values.email, values.password);
@@ -32,35 +34,34 @@ const LoginForm: React.FC = () => {
   });
 
   const handleLogin = async (email: string, password: string) => {
-    setErrorMessage(null); 
+    setErrorMessage(null);
     try {
       const response = await login({ email, password });
       console.log('Login successful:', response);
 
       const token = response.token || '';
       const role = response.role || '';
-  
+
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       if (role === 'STUDENT') {
-        navigate('/myStudentProfile'); 
+        navigate('/myStudentProfile');
       }
-
     } catch (error: any) {
       console.error('Login failed:', error);
-      
+
       if (error.response && error.response.data) {
         const errorMessage = error.response.data.message;
 
         if (errorMessage.includes('Invalid credentials.')) {
           setErrorMessage('البيانات غير صحيحة، يرجى مراجعة كلمة السر.');
-        } else if (errorMessage.includes("User with email")) {
-          setErrorMessage('المستخدم الذي يحمل هذا البريد الإلكتروني غير موجود.'); 
+        } else if (errorMessage.includes('User with email')) {
+          setErrorMessage('المستخدم الذي يحمل هذا البريد الإلكتروني غير موجود.');
         } else {
-          setErrorMessage(errorMessage); 
+          setErrorMessage(errorMessage);
         }
       } else {
-        setErrorMessage('حدث خطأ غير متوقع.'); 
+        setErrorMessage('حدث خطأ غير متوقع.');
       }
     }
   };
@@ -79,14 +80,15 @@ const LoginForm: React.FC = () => {
         </div>
 
         {errorMessage && (
-          <div className="mb-4 p-2 text-red-600 bg-red-200 rounded">
-            {errorMessage}
-          </div>
+          <div className="mb-4 p-2 text-red-600 bg-red-200 rounded">{errorMessage}</div>
         )}
 
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <div className="flex flex-col">
-            <label htmlFor="email" className="text-gray-700 dark:text-gray-300 flex items-center gap-1">
+            <label
+              htmlFor="email"
+              className="text-gray-700 dark:text-gray-300 flex items-center gap-1"
+            >
               <FaEnvelope />
               البريد الإلكتروني
             </label>
@@ -107,7 +109,10 @@ const LoginForm: React.FC = () => {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="password" className="text-gray-700 dark:text-gray-300 flex items-center gap-1">
+            <label
+              htmlFor="password"
+              className="text-gray-700 dark:text-gray-300 flex items-center gap-1"
+            >
               <FaLock />
               كلمة السر
             </label>
@@ -119,7 +124,9 @@ const LoginForm: React.FC = () => {
               value={formik.values.password}
               onChange={formik.handleChange}
               className={`p-2 rounded border ${
-                formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-gray-300'
+                formik.touched.password && formik.errors.password
+                  ? 'border-red-500'
+                  : 'border-gray-300'
               } focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600`}
             />
             {formik.touched.password && formik.errors.password ? (

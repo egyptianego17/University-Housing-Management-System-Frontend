@@ -21,7 +21,7 @@ const MyStudentProfile: React.FC = () => {
       <Sidebar />
       <Row className="w-100">
         <Col xs={12} md={6} lg={4} className="mx-auto">
-        <StudentProfile/>
+          <StudentProfile />
         </Col>
       </Row>
     </Container>

@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { getMyStudentProfile } from '@/api/student/studentApi';
-import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaBuilding, FaDoorClosed, FaLayerGroup } from 'react-icons/fa';
+import {
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaIdCard,
+  FaBuilding,
+  FaDoorClosed,
+  FaLayerGroup,
+} from 'react-icons/fa';
 import useTheme from '@/store/theme';
 
 interface UserProfileData {
@@ -29,14 +37,13 @@ const UserProfile: React.FC = () => {
         setProfileData(data);
         setLoading(false);
       } catch (err) {
-        console.error("Error fetching profile data:", err);
+        console.error('Error fetching profile data:', err);
         setError('تعذر تحميل البيانات. حاول مرة أخرى.');
         setLoading(false);
       }
     };
     fetchProfileData();
   }, []);
-
 
   if (loading) {
     return (
@@ -59,7 +66,9 @@ const UserProfile: React.FC = () => {
   return (
     <div
       dir="rtl"
-      className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'dark' : ''} bg-gray-100 dark:bg-gray-900 transition-all duration-300 pb-10`}
+      className={`min-h-screen flex items-center justify-center ${
+        isDarkMode ? 'dark' : ''
+      } bg-gray-100 dark:bg-gray-900 transition-all duration-300 pb-10`}
     >
       <div className="p-8 rounded-lg shadow-lg bg-white dark:bg-gray-800 w-full max-w-md transition-all duration-300">
         <div className="text-center mb-6">
@@ -73,12 +82,28 @@ const UserProfile: React.FC = () => {
               <ProfileField icon={<FaUser />} label="الاسم الأول" value={profileData.firstName} />
               <ProfileField icon={<FaUser />} label="الاسم الأوسط" value={profileData.middleName} />
               <ProfileField icon={<FaUser />} label="اسم العائلة" value={profileData.lastName} />
-              <ProfileField icon={<FaEnvelope />} label="البريد الإلكتروني" value={profileData.email} />
-              <ProfileField icon={<FaPhone />} label="رقم الهاتف" value={profileData.mobileNumber} />
-              <ProfileField icon={<FaIdCard />} label="الرقم القومي" value={profileData.nationalId} />
+              <ProfileField
+                icon={<FaEnvelope />}
+                label="البريد الإلكتروني"
+                value={profileData.email}
+              />
+              <ProfileField
+                icon={<FaPhone />}
+                label="رقم الهاتف"
+                value={profileData.mobileNumber}
+              />
+              <ProfileField
+                icon={<FaIdCard />}
+                label="الرقم القومي"
+                value={profileData.nationalId}
+              />
               <ProfileField icon={<FaBuilding />} label="الكلية" value={profileData.faculty} />
               <ProfileField icon={<FaDoorClosed />} label="الغرفة" value={profileData.room} />
-              <ProfileField icon={<FaLayerGroup />} label="الطابق" value={profileData.floor.toString()} />
+              <ProfileField
+                icon={<FaLayerGroup />}
+                label="الطابق"
+                value={profileData.floor.toString()}
+              />
             </>
           )}
         </div>

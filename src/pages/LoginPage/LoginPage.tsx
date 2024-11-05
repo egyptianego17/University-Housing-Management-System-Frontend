@@ -18,7 +18,7 @@ const LoginPage: React.FC = () => {
     >
       <Row className="w-100">
         <Col xs={12} md={6} lg={4} className="mx-auto">
-          <LoginForm/>
+          <LoginForm />
         </Col>
       </Row>
     </Container>
