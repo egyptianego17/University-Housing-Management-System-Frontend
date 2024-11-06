@@ -13,6 +13,9 @@ export default defineConfig({
       manifest: {
         theme_color: "#2473c6",
         background_color: "#1f3560",
+        name: 'Universal housing React Vite PWA',
+        short_name: 'UH',
+        description: 'Universal housing React Vite PWA',
         icons: [
           {
             purpose: "maskable",
@@ -27,13 +30,11 @@ export default defineConfig({
             type: "image/png"
           }
         ],
-        orientation: "portrait", 
+        orientation: "portrait",
         display: "standalone",
         dir: "rtl",
         lang: "en-US",
-        name: "Nezam",
-        short_name: "Nezam",
-        start_url: "/"
+        start_url: "/login"
       },
       includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
       devOptions: {
