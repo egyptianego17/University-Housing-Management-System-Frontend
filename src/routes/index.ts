@@ -23,6 +23,11 @@ const routes: Routes = {
     icon: HomeIcon,
     showInSidebar: false,
   },
+  [Pages.ScanQrCode]: {
+    component: asyncComponentLoader(() => import('@/pages/QrScanner')),
+    path: '/scan-attendance',
+    title: 'Scan Attendance',
+  },
   [Pages.Page1]: {
     component: asyncComponentLoader(() => import('@/pages/Page1')),
     path: '/page-1',
