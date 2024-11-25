@@ -14,6 +14,7 @@ enum Pages {
   LandingPage,
   Registeration,
   NotFound,
+  ScanQrCode,
 }
 
 type PathRouteCustomProps = {
