@@ -31,7 +31,7 @@ const StudentProfile: React.FC = () => {
         setLoading(false);
       }
     };
-    fetchProfileData();
+    fetchProfileData().then((r) => r);
   }, []);
 
   if (loading) {

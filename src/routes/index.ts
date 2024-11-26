@@ -82,6 +82,12 @@ const routes: Routes = {
     path: '*',
     showInSidebar: false,
   },
+  [Pages.QrCode]: {
+    component: asyncComponentLoader(() => import('@/pages/QrCode')),
+    path: '/student/getQrCode',
+    title: 'QR Code',
+    showInSidebar: true,
+  },
 };
 
 export default routes;
