@@ -1,16 +1,3 @@
-:root {
-  --dark-background: var(--dark-sea-green);
-  --light-background: var(--mint);
-}
-
-.dark-mode {
-  background-color: var(--dark-background);
-}
-
-.light-mode {
-  background-color: var(--light-background);
-}
-
 #reader {
   width: 50%;
   height: 40%;
@@ -37,7 +24,7 @@
   padding: 0.5em;
   margin: 0.5em;
   border-radius: 0.5em;
-  background-color: #679f38;
+  background-color: #2563eb;
   opacity: 1 !important;
   text-transform: uppercase;
   color: white;
@@ -46,13 +33,8 @@
   padding: 0.4em;
   margin: 0.5em;
   border-radius: 0.5em;
-  background-color: #679f38;
+  background-color: #2563eb;
   opacity: 1 !important;
   text-transform: uppercase;
   color: white;
 }
-/* #reader__scan_region {
-  width: 60% !important;
-  height: 40% !important;
-  position: absolute;
-} */
