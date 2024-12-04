@@ -24,7 +24,7 @@ const routes: Routes = {
     showInSidebar: false,
   },
   [Pages.ScanQrCode]: {
-    component: asyncComponentLoader(() => import('@/pages/QrScanner')),
+    component: asyncComponentLoader(() => import('@/pages/AttendanceScanner')),
     path: '/scan-attendance',
     title: 'Scan Attendance',
   },
