@@ -16,9 +16,13 @@ function QrScanner({ onScan, isDarkMode, onError }: IProbs) {
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
         ماسح رمز الاستجابة السريعة
       </h2>
-      <div className="rounded-full">
+      <div className="w-full max-w-lg rounded-lg overflow-hidden">
         <Scanner
-          classNames={{ container: '', video: 'max-w-72 max-h-68 rounded-xl' }}
+          classNames={{
+            container: 'flex justify-center items-center',
+            video: 'w-full h-72 sm:h-96 rounded-lg',
+          }}
+          components={{ audio: false, finder: false }}
           onScan={onScan}
           onError={onError}
           allowMultiple
