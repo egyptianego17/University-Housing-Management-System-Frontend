@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import DefaultIcon from '@mui/icons-material/Deblur';
 import List from '@mui/material/List';
@@ -7,12 +7,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import Button from '@mui/material/Button';
 
 import routes from '@/routes';
 import useSidebar from '@/store/sidebar';
 
 function Sidebar() {
   const [isSidebarOpen, sidebarActions] = useSidebar();
+  const navigate = useNavigate();
 
   return (
     <SwipeableDrawer
@@ -24,18 +26,35 @@ function Sidebar() {
       swipeAreaWidth={30}
       data-pw="sidebar"
     >
-      <List sx={{ width: 250, pt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
-        {Object.values(routes)
-          .filter((route) => route.showInSidebar)
-          .map(({ path, title, icon: Icon }) => (
-            <ListItem sx={{ p: 0 }} key={path}>
-              <ListItemButton component={Link} to={path as string} onClick={sidebarActions.close}>
-                <ListItemIcon>{Icon ? <Icon /> : <DefaultIcon />}</ListItemIcon>
-                <ListItemText>{title}</ListItemText>
-              </ListItemButton>
-            </ListItem>
-          ))}
-      </List>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <List sx={{ flex: 1, pt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
+          {Object.values(routes)
+            .filter((route) => route.showInSidebar)
+            .map(({ path, title, icon: Icon }) => (
+              <ListItem sx={{ p: 0 }} key={path}>
+                <ListItemButton component={Link} to={path as string} onClick={sidebarActions.close}>
+                  <ListItemIcon>{Icon ? <Icon /> : <DefaultIcon />}</ListItemIcon>
+                  <ListItemText>{title}</ListItemText>
+                </ListItemButton>
+              </ListItem>
+            ))}
+        </List>
+        <div style={{ padding: '16px', borderTop: '1px solid #ddd' }}>
+          <Button
+            variant="contained"
+            color="error"
+            fullWidth
+            onClick={() => {
+              localStorage.setItem('token', '');
+              localStorage.setItem('role', '');
+              sidebarActions.close();
+              navigate('/login');
+            }}
+          >
+            Sign Out
+          </Button>
+        </div>
+      </div>
     </SwipeableDrawer>
   );
 }

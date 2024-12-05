@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { checkTokenStatus } from '../../api/auth'; // Assuming this is the endpoint function
+import { checkTokenStatus } from '@/api/auth'; // Assuming this is the endpoint function
 import useTheme from '@/store/theme';
 
 interface TokenStatusResponse {
@@ -22,10 +22,10 @@ const CheckTokenPage: React.FC = () => {
           navigate('/login');
           return;
         }
-        
+
         const res = await checkTokenStatus();
         if (res.status === 'Token is valid' && res.firstName) {
-          setResponse(res); 
+          setResponse(res);
         } else {
           navigate('/login');
         }
@@ -39,7 +39,7 @@ const CheckTokenPage: React.FC = () => {
   }, [navigate]);
 
   const handleContinue = () => {
-    navigate('/student/myprofile'); 
+    navigate('/student/myprofile');
   };
 
   const handleNewLogin = () => {
@@ -48,7 +48,7 @@ const CheckTokenPage: React.FC = () => {
     navigate('/login');
   };
 
-  if (!response) return null; 
+  if (!response) return null;
 
   return (
     <div
@@ -59,8 +59,12 @@ const CheckTokenPage: React.FC = () => {
     >
       <div className="p-8 rounded-lg shadow-lg bg-white dark:bg-gray-800 w-full max-w-md transition-all duration-300">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">مرحباً، {response.firstName}</h2>
-          <p className="text-gray-600 dark:text-gray-300">هل تريد المتابعة بحسابك الحالي أو تسجيل الدخول بحساب جديد؟</p>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+            مرحباً، {response.firstName}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300">
+            هل تريد المتابعة بحسابك الحالي أو تسجيل الدخول بحساب جديد؟
+          </p>
         </div>
 
         <div className="space-y-4">
