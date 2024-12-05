@@ -1,11 +1,12 @@
 import useTheme from '@/store/theme';
-import { Alert } from '@mui/material';
 import { IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import Header from '@/sections/Header';
 import Sidebar from '@/sections/Sidebar';
 import QrScanner from '@/components/QrScanner/QrScanner';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '@/api';
+import { motion } from 'motion/react';
+import ConditionalAlert from '@/components/ConditionalAlert';
 import { useNavigate } from 'react-router-dom';
 import { checkTokenStatus, getRole } from '@/api/auth';
 import { Container } from 'react-bootstrap';
@@ -16,7 +17,8 @@ interface TokenStatusResponse {
 }
 
 export default function AttendanceScanner() {
-  const [isError, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [theme] = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const isDarkMode = theme === 'dark';
@@ -75,16 +77,34 @@ export default function AttendanceScanner() {
         userId: scanResult,
         date: new Date().toISOString(),
       });
-      console.log(res);
+      if (res.status === 201) {
+        setIsSubmitted(true);
+      }
     } catch (err: any) {
       if (err.status === 400) {
-        setError(true);
+        setErrorMessage('رمز الدخول غير صحيح');
+      } else if (err.status === 500) {
+        setErrorMessage('تعذر تسجيل الطالب, حاول مجددا');
+      } else if (err.status === 409) {
+        setErrorMessage('الطالب مسجل بالفعل');
+      } else {
+        setErrorMessage('تعذر الاتصال بالخادم, حاول مرة اخرى');
       }
+    } finally {
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setErrorMessage(null);
+      }, 2500);
     }
   }
 
   return (
-    <div className="h-screen grid grid-rows-[auto,1fr,auto]">
+    <motion.div
+      layout={true}
+      className={`h-svh grid grid-rows-[auto,1fr,.1fr] ${
+        isDarkMode ? 'dark' : ''
+      } bg-white dark:bg-gray-900 transition-all duration-300`}
+    >
       <div className="sticky top-0 z-10 w-full bg-gray-100 shadow-md">
         <Header />
         <Sidebar />
@@ -95,16 +115,9 @@ export default function AttendanceScanner() {
         } bg-white dark:bg-gray-900 transition-all duration-300`}
       >
         <QrScanner onScan={handleScan} isDarkMode={isDarkMode} />
-        {isError ? (
-          <Alert
-            variant="outlined"
-            severity="error"
-            className="text-red-600 dark:text-red-400 bg-red-200 dark:bg-red-800 rounded p-2 w-fit"
-          >
-            الطالب غير مسجل
-          </Alert>
-        ) : null}
       </div>
-    </div>
+      <ConditionalAlert type="error" condition={errorMessage !== null} message={errorMessage} />
+      <ConditionalAlert type="success" condition={isSubmitted} message={'تم تسجيل الطالب بنجاح'} />
+    </motion.div>
   );
 }

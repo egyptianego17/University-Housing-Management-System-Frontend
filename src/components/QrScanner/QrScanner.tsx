@@ -16,7 +16,7 @@ function QrScanner({ onScan, isDarkMode, onError }: IProbs) {
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
         ماسح رمز الاستجابة السريعة
       </h2>
-      <div className="w-full max-w-lg rounded-lg overflow-hidden">
+      <div className="max-w-xs rounded-lg overflow-hidden">
         <Scanner
           classNames={{
             container: 'flex justify-center items-center',
