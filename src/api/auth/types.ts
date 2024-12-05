@@ -21,18 +21,17 @@ export interface RegisterationRequest {
   birthDate: string;
   mobileNumber: string;
   nationalId: string;
-  nationalIdImageUrl?: string; 
+  nationalIdImageUrl?: string;
   section?: 'MALE' | 'FEMALE' | 'HYBRID';
   address: string;
   faculty: string;
   grade: number;
   lastYearAcademicGrade: number;
-  disability?: boolean; 
-  studentIdImageUrl?: string; 
+  disability?: boolean;
+  studentIdImageUrl?: string;
   room: string;
   floor: number;
 }
-
 
 export interface RegisterationResponse {
   message: string;
@@ -40,5 +39,6 @@ export interface RegisterationResponse {
 }
 export interface TokenStatusCheckResponse {
   status: string;
-  firstName?: string;
+  firstName: string;
+  role: string;
 }

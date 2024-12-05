@@ -4,39 +4,20 @@ import useTheme from '@/store/theme';
 import StudentProfile from '../../components/StudentProfile/index';
 import Header from '@/sections/Header';
 import Sidebar from '@/sections/Sidebar';
-import { checkTokenStatus, getRole } from '@/api/auth';
 import { useNavigate } from 'react-router-dom';
-
-interface TokenStatusResponse {
-  status: string;
-  firstName?: string;
-}
+import authorize from '@/utils/authorization';
 
 const MyStudentProfile: React.FC = () => {
   const [theme] = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const isDarkMode = theme === 'dark';
   const navigate = useNavigate();
-  const [response, setResponse] = useState<TokenStatusResponse | null>(null);
 
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/login');
-          return;
-        }
-
-        const res = await checkTokenStatus();
-        if (res.status === 'Token is valid' && res.firstName) {
-          setResponse(res);
-        } else {
-          navigate('/login');
-        }
-
-        const role = await getRole(token);
-        if (role !== 'STUDENT') {
+        const isAuthorized = await authorize('STUDENT');
+        if (!isAuthorized) {
           navigate('/login');
         }
       } catch (error) {
@@ -62,7 +43,6 @@ const MyStudentProfile: React.FC = () => {
       </Container>
     );
   }
-  if (!response) return null;
 
   return (
     <Container

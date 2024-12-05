@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FaLock, FaEnvelope, FaUserAlt } from 'react-icons/fa';
@@ -39,7 +39,6 @@ const LoginForm: React.FC = () => {
       const role = response.role || '';
 
       localStorage.setItem('token', token);
-      localStorage.setItem('role', role);
       if (role === 'STUDENT') {
         navigate('/student/myprofile');
       }
@@ -61,6 +60,10 @@ const LoginForm: React.FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+    localStorage.removeItem('token');
+  }, []);
 
   return (
     <div

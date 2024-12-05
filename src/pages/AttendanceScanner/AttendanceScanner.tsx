@@ -8,13 +8,8 @@ import axiosInstance from '@/api';
 import { motion } from 'motion/react';
 import ConditionalAlert from '@/components/ConditionalAlert';
 import { useNavigate } from 'react-router-dom';
-import { checkTokenStatus, getRole } from '@/api/auth';
 import { Container } from 'react-bootstrap';
-
-interface TokenStatusResponse {
-  status: string;
-  firstName?: string;
-}
+import authorize from '@/utils/authorization';
 
 export default function AttendanceScanner() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -23,26 +18,12 @@ export default function AttendanceScanner() {
   const [isLoading, setIsLoading] = useState(true);
   const isDarkMode = theme === 'dark';
   const navigate = useNavigate();
-  const [response, setResponse] = useState<TokenStatusResponse | null>(null);
 
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/login');
-          return;
-        }
-
-        const res = await checkTokenStatus();
-        if (res.status === 'Token is valid' && res.firstName) {
-          setResponse(res);
-        } else {
-          navigate('/login');
-        }
-
-        const role = await getRole(token);
-        if (role !== 'ATTENDANCE_MANAGER') {
+        const isAuthorized = await authorize('ATTENDANCE_MANAGER');
+        if (!isAuthorized) {
           navigate('/login');
         }
       } catch (error) {
@@ -68,7 +49,6 @@ export default function AttendanceScanner() {
       </Container>
     );
   }
-  if (!response) return null;
 
   async function handleScan(result: IDetectedBarcode[]) {
     const scanResult = result[0].rawValue;

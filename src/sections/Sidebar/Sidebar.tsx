@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 
 import routes from '@/routes';
 import useSidebar from '@/store/sidebar';
-import { getRole } from '@/api/auth';
+import { checkTokenStatus } from '@/api/auth';
 import { useEffect, useState } from 'react';
 import { Role } from '@/routes/types';
 
@@ -22,7 +22,8 @@ function Sidebar() {
 
   useEffect(() => {
     async function fetchRole() {
-      setRole(await getRole(localStorage.getItem('token')));
+      const { role } = await checkTokenStatus();
+      setRole(role);
     }
     fetchRole();
   }, []);

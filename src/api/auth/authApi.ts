@@ -23,17 +23,3 @@ export const checkTokenStatus = async (): Promise<TokenStatusCheckResponse> => {
   const response = await axiosInstance.get('/auth/token/status');
   return response.data;
 };
-
-export const getRole = async (token: string | null): Promise<any> => {
-  try {
-    const response = await axiosInstance.get('/user/getRole', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching role:', error);
-    throw error;
-  }
-};
