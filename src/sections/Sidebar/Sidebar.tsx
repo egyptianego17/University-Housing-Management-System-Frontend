@@ -11,10 +11,21 @@ import Button from '@mui/material/Button';
 
 import routes from '@/routes';
 import useSidebar from '@/store/sidebar';
+import { getRole } from '@/api/auth';
+import { useEffect, useState } from 'react';
+import { Role } from '@/routes/types';
 
 function Sidebar() {
+  const [role, setRole] = useState<string | null>(null);
   const [isSidebarOpen, sidebarActions] = useSidebar();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchRole() {
+      setRole(await getRole(localStorage.getItem('token')));
+    }
+    fetchRole();
+  }, []);
 
   return (
     <SwipeableDrawer
@@ -29,7 +40,7 @@ function Sidebar() {
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         <List sx={{ flex: 1, pt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
           {Object.values(routes)
-            .filter((route) => route.showInSidebar)
+            .filter((route) => route.showInSidebar && route.accessibleBy?.includes(role as Role))
             .map(({ path, title, icon: Icon }) => (
               <ListItem sx={{ p: 0 }} key={path}>
                 <ListItemButton component={Link} to={path as string} onClick={sidebarActions.close}>

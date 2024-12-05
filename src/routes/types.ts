@@ -18,11 +18,19 @@ enum Pages {
   QrCode,
 }
 
+export enum Role {
+  ADMIN = 'ADMIN',
+  ATTENDANCE_MANAGER = 'ATTENDANCE_MANAGER',
+  CATERING_MANAGER = 'CATERING_MANAGER',
+  STUDENT = 'STUDENT',
+}
+
 type PathRouteCustomProps = {
   title?: string;
   component: FC;
   icon?: FC<SvgIconProps>;
   showInSidebar?: boolean;
+  accessibleBy?: Role[];
 };
 
 type Routes = Record<Pages, PathRouteProps & PathRouteCustomProps>;
