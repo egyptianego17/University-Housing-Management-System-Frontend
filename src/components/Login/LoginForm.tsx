@@ -41,6 +41,8 @@ const LoginForm: React.FC = () => {
       localStorage.setItem('token', token);
       if (role === 'STUDENT') {
         navigate('/student/myprofile');
+      } else if (role === 'ATTENDANCE_MANAGER') {
+        navigate('/attendance-manager/scan');
       }
     } catch (error: any) {
       console.error('Login failed:', error);
