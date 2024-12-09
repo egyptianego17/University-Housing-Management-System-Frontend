@@ -29,6 +29,13 @@ const routes: Routes = {
     showInSidebar: true,
     accessibleBy: [Role.ATTENDANCE_MANAGER],
   },
+  [Pages.StudentDetails]: {
+    component: asyncComponentLoader(() => import('@/pages/StudentDetailsPage')),
+    path: '/attendance-manager/student-details',
+    title: 'Student Details',
+    showInSidebar: false,
+    accessibleBy: [Role.ATTENDANCE_MANAGER],
+  },
   [Pages.Page1]: {
     component: asyncComponentLoader(() => import('@/pages/Page1')),
     path: '/page-1',

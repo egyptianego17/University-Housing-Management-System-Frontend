@@ -16,6 +16,7 @@ enum Pages {
   NotFound,
   ScanQrCode,
   QrCode,
+  StudentDetails,
 }
 
 export enum Role {
