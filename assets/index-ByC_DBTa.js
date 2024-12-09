@@ -1,0 +1,1 @@
+import{j as r}from"./index-1KCgOHEr.js";import{M as e}from"./Meta-BWRPJZOc.js";import{F as t,T as a}from"./App-Dzi0qYM0.js";import"./index-D6LXQ_U_.js";import"./index.esm-BpmT3UQX.js";function p(){return r.jsxs(r.Fragment,{children:[r.jsx(e,{title:"page 1"}),r.jsx(t,{children:r.jsx(a,{variant:"h3",children:"Page 1"})})]})}export{p as default};
