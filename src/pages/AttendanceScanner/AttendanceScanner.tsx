@@ -3,8 +3,7 @@ import { IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import Header from '@/sections/Header';
 import Sidebar from '@/sections/Sidebar';
 import QrScanner from '@/components/QrScanner/QrScanner';
-import React, { useEffect, useState } from 'react';
-import axiosInstance from '@/api';
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import ConditionalAlert from '@/components/ConditionalAlert';
 import { useNavigate } from 'react-router-dom';
@@ -53,13 +52,8 @@ export default function AttendanceScanner() {
   async function handleScan(result: IDetectedBarcode[]) {
     const scanResult = result[0].rawValue;
     try {
-      const res = await axiosInstance.post('/attendance/create', {
-        userId: scanResult,
-        date: new Date().toISOString(),
-      });
-      if (res.status === 201) {
-        setIsSubmitted(true);
-      }
+      console.log(scanResult);
+      navigate(`/attendance-manager/student-details/${scanResult}`);
     } catch (err: any) {
       if (err.status === 400) {
         setErrorMessage('رمز الدخول غير صحيح');

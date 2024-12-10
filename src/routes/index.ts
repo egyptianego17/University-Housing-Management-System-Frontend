@@ -31,7 +31,7 @@ const routes: Routes = {
   },
   [Pages.StudentDetails]: {
     component: asyncComponentLoader(() => import('@/pages/StudentDetailsPage')),
-    path: '/attendance-manager/student-details',
+    path: '/attendance-manager/student-details/:id',
     title: 'Student Details',
     showInSidebar: false,
     accessibleBy: [Role.ATTENDANCE_MANAGER],

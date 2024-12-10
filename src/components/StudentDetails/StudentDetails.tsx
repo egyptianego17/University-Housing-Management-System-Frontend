@@ -8,8 +8,17 @@ import {
   FaLayerGroup,
 } from 'react-icons/fa';
 import useTheme from '@/store/theme';
+import { StudentProfileInterface } from '@/api/student';
 
-function StudentDetails({ children }: { children?: any }) {
+interface StudentDetailsPropsI {
+  children?: any;
+  studentData: StudentProfileInterface | null;
+}
+
+function StudentDetails({ children, studentData }: StudentDetailsPropsI) {
+  const fullName = [studentData?.firstName, studentData?.middleName, studentData?.lastName].join(
+    ' ',
+  );
   const [theme] = useTheme();
   const isDarkMode = theme === 'dark';
 
@@ -22,13 +31,17 @@ function StudentDetails({ children }: { children?: any }) {
     >
       <div className="bg-white dark:bg-gray-900 w-full max-w-md transition-all duration-300">
         <div className="space-y-4">
-          <ProfileField icon={<FaUser />} label="الاسم بالكامل" value={'Test'} />
-          <ProfileField icon={<FaEnvelope />} label="البريد الإلكتروني" value={'Test'} />
-          <ProfileField icon={<FaPhone />} label="رقم الهاتف" value={'Test'} />
-          <ProfileField icon={<FaIdCard />} label="الرقم القومي" value={'Test'} />
-          <ProfileField icon={<FaBuilding />} label="الكلية" value={'Test'} />
-          <ProfileField icon={<FaDoorClosed />} label="الغرفة" value={'Test'} />
-          <ProfileField icon={<FaLayerGroup />} label="الطابق" value={'Test'} />
+          <ProfileField icon={<FaUser />} label="الاسم بالكامل" value={fullName} />
+          <ProfileField
+            icon={<FaEnvelope />}
+            label="البريد الإلكتروني"
+            value={studentData?.email}
+          />
+          <ProfileField icon={<FaPhone />} label="رقم الهاتف" value={studentData?.mobileNumber} />
+          <ProfileField icon={<FaIdCard />} label="الرقم القومي" value={studentData?.nationalId} />
+          <ProfileField icon={<FaBuilding />} label="الكلية" value={studentData?.faculty} />
+          <ProfileField icon={<FaDoorClosed />} label="الغرفة" value={studentData?.room} />
+          <ProfileField icon={<FaLayerGroup />} label="الطابق" value={studentData?.floor + ''} />
 
           {children && children}
         </div>
@@ -39,7 +52,7 @@ function StudentDetails({ children }: { children?: any }) {
 
 interface ProfileFieldProps {
   label: string;
-  value: string;
+  value: string | undefined;
   icon: React.ReactNode;
 }
 
