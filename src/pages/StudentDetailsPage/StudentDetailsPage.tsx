@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Typography, Checkbox, IconButton } from '@mui/material';
+import { Typography, IconButton } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import Header from '@/sections/Header';
@@ -10,12 +10,27 @@ import StudentDetails from '@/components/StudentDetails';
 import { getStudentByEncryptedId, StudentProfileInterface } from '@/api/student';
 import authorize from '@/utils/authorization';
 import { Container } from 'react-bootstrap';
+import { AttendanceRecordI, getAttendanceRecord } from '@/api/attendanceManager';
+import MealsCheckBox from '@/components/MealsCheckBox';
+
+export interface MealsI {
+  tookBreakfast: boolean | undefined;
+  tookLunch: boolean | undefined;
+  tookDinner: boolean | undefined;
+}
+const mealsInitialStatus = {
+  tookBreakfast: false,
+  tookDinner: false,
+  tookLunch: false,
+};
 
 const StudentAttendancePage = () => {
   const { id } = useParams();
   const [studentData, setStudentData] = useState<StudentProfileInterface | null>(null);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [attendanceRecord, setAttendanceRecord] = useState<AttendanceRecordI | null>(null);
+  const [meals, setMeals] = useState<MealsI>(mealsInitialStatus);
   const [theme] = useTheme();
   const isDarkMode = theme === 'dark';
 
@@ -36,16 +51,32 @@ const StudentAttendancePage = () => {
 
   useEffect(() => {
     async function fetchStudentDetails() {
-      const [studentInfo] = await Promise.all([getStudentByEncryptedId(String(id))]);
-      if (!studentInfo) navigate('/NOT FOUND');
-      setStudentData(studentInfo);
+      try {
+        const studentDetailsPromise = getStudentByEncryptedId(String(id));
+        const attendanceRecordPromise = getAttendanceRecord(String(id), new Date().toISOString());
+        const [studentInfo, attendanceInfo] = await Promise.all([
+          studentDetailsPromise,
+          attendanceRecordPromise,
+        ]);
+        setAttendanceRecord(attendanceInfo);
+        setStudentData(studentInfo);
+      } catch (err: any) {
+        if (err.response.data.statusCode === 400) {
+          navigate('NOT-FOUND');
+        }
+      }
     }
-    try {
-      fetchStudentDetails();
-    } catch (err) {
-      navigate('/NOT-FOUND');
-    }
+    setIsLoading(true);
+    fetchStudentDetails().then(() => setIsLoading(false));
   }, [id, navigate]);
+
+  useEffect(() => {
+    setMeals({
+      tookBreakfast: attendanceRecord?.tookBreakfast,
+      tookLunch: attendanceRecord?.tookLunch,
+      tookDinner: attendanceRecord?.tookDinner,
+    });
+  }, [attendanceRecord]);
 
   if (isLoading) {
     return (
@@ -74,35 +105,8 @@ const StudentAttendancePage = () => {
 
       <div className="p-8 pt-2">
         <StudentDetails studentData={studentData}>
-          <div className="space-y-4 w-full max-w-md transition-all duration-300">
-            <div
-              dir="rtl"
-              className="flex flex-col p-4 rounded-lg shadow-md dark:bg-gray-700 dark:text-white bg-gray-50 text-gray-600"
-            >
-              <div className="font-semibold">الوجبات:</div>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <Checkbox id="breakfast" color={isDarkMode ? 'info' : 'primary'} />
-                  <label htmlFor="breakfast" className="ml-2">
-                    الإفطار
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <Checkbox id="lunch" color={isDarkMode ? 'info' : 'primary'} />
-                  <label htmlFor="lunch" className="ml-2">
-                    الغداء
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <Checkbox id="dinner" color={isDarkMode ? 'info' : 'primary'} />
-                  <label htmlFor="dinner" className="ml-2">
-                    العشاء
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <SaveButton isDarkMode={isDarkMode} />
+          <MealsCheckBox meals={meals} setMeals={setMeals} />
+          <SaveButton />
         </StudentDetails>
       </div>
     </motion.div>
@@ -143,7 +147,11 @@ function SecondaryHeader({ isDarkMode }: { isDarkMode: boolean }) {
     </div>
   );
 }
-function SaveButton({ isDarkMode }: { isDarkMode: boolean }) {
+
+function SaveButton() {
+  const [theme] = useTheme();
+  const isDarkMode = theme === 'dark';
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
